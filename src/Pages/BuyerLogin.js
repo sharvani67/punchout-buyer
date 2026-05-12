@@ -22,7 +22,10 @@ const handleLogin = async () => {
   if (data.buyerId) {
     localStorage.setItem("buyerId", data.buyerId);
 
-    // ✅ Go to supplier selection page
+    // ✅ Show success message
+    alert(data.message || "Login successful");
+
+    // ✅ Navigate after alert
     navigate("/supplier");
   } else {
     alert(data.message || "Login failed");

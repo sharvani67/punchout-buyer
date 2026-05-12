@@ -4,22 +4,27 @@ import { BASEURL } from "../Config/Api";
 
 const SupplierPage = () => {
 
-  const handlePunchout = async (supplierName) => {
-    const buyerId = localStorage.getItem("buyerId");
+const handlePunchout = async (supplierName) => {
+  const buyerId = localStorage.getItem("buyerId");
 
-    const res = await fetch(`${BASEURL}/api/buyer/punchout/start`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "buyer-id": buyerId,
-       
-      },
-    });
+  const res = await fetch(`${BASEURL}/api/buyer/punchout/start`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "buyer-id": buyerId,
+    },
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
+  // ✅ Show success message
+  alert("Punchout session started successfully 🚀");
+
+  // ✅ Redirect after small delay
+  setTimeout(() => {
     window.location.href = data.redirectUrl;
-  };
+  }, 1000);
+};
 
   const suppliers = [
     {
