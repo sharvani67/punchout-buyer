@@ -5,27 +5,50 @@ import { BASEURL } from "../Config/Api";
 const SupplierPage = () => {
 
 const handlePunchout = async (supplierName) => {
-  const buyerId = localStorage.getItem("buyerId");
+  try {
+    const buyerId = localStorage.getItem("buyerId");
+    const orgId = localStorage.getItem("orgId");
+    const buyerEmail = localStorage.getItem("buyerEmail");
 
-  const res = await fetch(`${BASEURL}/api/buyer/punchout/start`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "buyer-id": buyerId,
-    },
-  });
+    const res = await fetch(`${BASEURL}/api/buyer/punchout/start`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "buyer-id": buyerId,
+        "org-id": orgId,
+        "buyer-email": buyerEmail,
+      },
+      body: JSON.stringify({
+        supplier: supplierName,
+      }),
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  // ✅ Show success message
-  alert("Punchout session started successfully 🚀");
+    // ❌ If backend returns error (like invalid org)
+    if (!res.ok) {
+      alert(data.error || "❌ You are not a registered buyer");
+      return;
+    }
 
-  // ✅ Redirect after small delay
-  setTimeout(() => {
-    window.location.href = data.redirectUrl;
-  }, 1000);
+    // ❌ If redirect URL missing
+    if (!data.redirectUrl) {
+      alert("❌ Punchout failed. No redirect URL received.");
+      return;
+    }
+
+    // ✅ Success case
+    alert("✅ Punchout session started successfully 🚀");
+
+    setTimeout(() => {
+      window.location.href = data.redirectUrl;
+    }, 1000);
+
+  } catch (error) {
+    console.error(error);
+    alert("❌ Something went wrong. Please try again.");
+  }
 };
-
   const suppliers = [
     {
       name: "MVB Supplier",

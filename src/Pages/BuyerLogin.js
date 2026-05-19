@@ -20,12 +20,13 @@ const handleLogin = async () => {
   const data = await res.json();
 
   if (data.buyerId) {
+    // ✅ STORE BOTH
     localStorage.setItem("buyerId", data.buyerId);
+    localStorage.setItem("orgId", data.orgId); // ⭐ VERY IMPORTANT
+    localStorage.setItem("buyerEmail", email); // ✅ ADD THIS
 
-    // ✅ Show success message
     alert(data.message || "Login successful");
 
-    // ✅ Navigate after alert
     navigate("/supplier");
   } else {
     alert(data.message || "Login failed");
